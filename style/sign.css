@@ -1,0 +1,11 @@
+body {
+    margin: 1rem;
+  }
+  
+  form {
+    border: 2px border #222;
+    margin: 0 auto;
+    max-width: 500px;
+    padding: 2rem;
+    background-color: blanchedalmond;
+  }
