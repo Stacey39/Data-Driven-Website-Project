@@ -1,118 +1,107 @@
+// 引入 node.js 內建模組
+const path = require('path');
+const fs = require('fs');
+
+// 引入第三方模組
 const mysql = require('mysql');
 const express = require('express');
 const session = require('express-session');
-const path = require('path');
 
+// 連接 mySQL
 const connection = mysql.createConnection({
- host     : 'localhost',
- user     : 'root',
- password : '',
- database : 'nodelogin'
+    host: 'localhost',
+    user: 'newuser',
+    password: 'newuser1234',
+    database: 'nodelogin'
 });
-
-// const pool = mysql.createPool({
-//     connectionLimit :100,//important
-//     host : 'localhost',
-//     user :'root',
-//     password:'',
-//     database:'todolist',
-//     debug :false
-// });
 
 const app = express();
 
 app.use(session({
- secret: 'secret',
- resave: true,
- saveUninitialized: true
+    secret: 'asdqwezxc',
+    resave: true,
+    saveUninitialized: true
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'static')));
 
-// http://localhost:3000/ (根目錄)
-app.get('/', function(request, response) {
- // Render login template
- response.sendFile(path.join(__dirname + '/login.html'));
+// http://localhost:3000/
+app.get('/', function (request, response) {
+
+    //Load HTML String from a file
+    // let data = fs.readFileSync('./login.html',
+    //     { encoding: 'utf8', flag: 'r' });
+
+    //Replace parts of your HTML to display your own data
+    // data = data.replace('XCDXCD', 'Ali');
+    // response.send(data);
+
+    //Display an HTML file without changing it:
+    response.sendFile(path.join(__dirname + '/login.html'));
 });
+
 
 // http://localhost:3000/auth
-// stacey: login <form action='/auth' method='post'> 
-app.post('/auth', function(request, response) {
- // Capture the input fields
- // <input name='username'/>
- let username = request.body.username;
- // <input name='password'/>
- let password = request.body.password;
- // Ensure the input fields exists and are not empty
- if (username && password) {
-  // Execute SQL query that'll select the account from the database based on the specified username and password
-  connection.query('SELECT * FROM accounts WHERE username = ? AND password = ?', [username, password], function(error, results, fields) {
-   // If there is an issue with the query, output the error
-   if (error) throw error;
-   // If the account exists
-   if (results.length > 0) {
-    // Authenticate the user
-    request.session.loggedin = true;
-    request.session.username = username;
-    // Redirect to home page
-    response.redirect('/home');
-   } else {
-    response.send('Incorrect Username and/or Password!');
-   }   
-   response.end();
-  });
- } else {
-  response.send('Please enter Username and Password!');
-  response.end();
- }
-});
+app.post('/auth', function (request, response) {
 
-/**
- * TODO: 
- * 1. add recoverPassword.html (<form action="/changePassword" method="post"> <input name="username">)
- * 2. login.js 路由機制、
- */
-
-
-app.post('/changePassword', function(request, response) {
     let username = request.body.username;
     let password = request.body.password;
+
+
+
     if (username && password) {
-        updateRow({username, password})
+
+        connection.query(
+            'SELECT * FROM accounts WHERE username = ? AND password = ?'
+            , [username, password], function (error, results, fields) {
+
+                if (error) {
+                    throw error;
+                }
+
+                if (results.length > 0) {
+                    request.session.loggedin = true;
+                    request.session.username = username;
+                    request.session.email = results[0].email;
+                    response.redirect('/home');
+                }
+                else {
+                    response.send('Incorrect username or password');
+                }
+
+                response.end();
+
+            });
+
+    }
+    else {
+        response.send('Please enter username and password');
+        response.end();
     }
 });
 
-function updateRow(data) {
-    let updateQuery = "UPDATE ?? SET ?? = ? WHERE ?? = ?";
-    let query = mysql.format(updateQuery,["userInfo","password",data.password,"username",data.username]);
-    // query = UPDATE todo SET `password`='Hello' WHERE `username`='shahid'
-    pool.query(query,(err,response)=>{
-    if(err){
-   console.error(err);
-   return;
-    }
-    // rows updated
-     console.log(response.affectedRows);
-   });
-    }
 
 // http://localhost:3000/home
-app.get('/home', function(request, response) {
- // If the user is loggedin
- if (request.session.loggedin) {
-  // Output username
-  response.send('Welcome back, ' + request.session.username + '!');
- } else {
-  // Not logged in
-  response.send('Please login to view this page!');
- }
- response.end();
-});
+app.get('/home', function (request, response) {
 
-// http://localhost:3000/recoverPassword
-app.get('/recoverPassword', function(req, res) {
-    res.sendFile(path.join(__dirname + '/recoverPassword.html'));
+    if (request.session.loggedin) {
+
+
+        //Load HTML String from a file
+        let data = fs.readFileSync('./home.html',
+            { encoding: 'utf8', flag: 'r' });
+
+        //Replace parts of your HTML to display your own data
+        data = data.replace('<!--EMAILADDRESS-->', request.session.email);
+        response.send(data);
+
+    }
+    else {
+        response.send('Please login!');
+    }
+    response.end();
 });
 
 app.listen(3000);
