@@ -5,73 +5,58 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="styles/register.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Change Information</title>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/styles/register.css">
 </head>
 <body>
-    <form>
-        <h1>change information</h1>
-        <p></p>
-      <div class="mb-3">
-             <p></p>
-      </div>
+    <form action="/changeInfo" method="POST">
+        <h1>Change Information</h1>
        <form class="row g-3">
-        <div class="col-md-6">
-          <label for="inputEmail4" class="form-label">First Name</label>
-          <input type="email" class="form-control" id="inputEmail4">
+        <div class="col-md-6 py-2">
+          <label for="firstName" class="form-label">First Name</label>
+          <input type="text" class="form-control" id="firstName" name="firstName" required>
         </div>
-        <p></p>
-        <div class="col-md-6">
-          <label for="inputPassword4" class="form-label">Last Name</label>
-          <input type="password" class="form-control" id="inputPassword4">
+        <div class="col-md-6 py-2">
+          <label for="lastName" class="form-label">Last Name</label>
+          <input type="text" class="form-control" id="lastName" name="lastName" required>
         </div>
-        <p></p>
-        <div class="col-md-6">
-            <label for="inputPassword4" class="form-label">Phone Number</label>
-            <input type="password" class="form-control" id="inputPassword4">
+        <div class="col-md-6 py-2">
+            <label for="phoneNumber" class="form-label">Phone Number</label>
+            <input type="number" class="form-control" id="phoneNumber" name="phoneNumber" required>
           </div>
-          <p></p>
-          <div class="col-md-6">
-            <label for="inputPassword4" class="form-label">Email Address</label>
-            <input type="password" class="form-control" id="inputPassword4">
+          <div class="col-md-6 py-2">
+            <label for="email" class="form-label">Email Address</label>
+            <input type="text" class="form-control" id="email" name="email" required>
           </div>      
       </div>
-      <p></p>
-      <div class="col-md-6">
-        <label for="inputPassword4" class="form-label">Password</label>
-        <input type="password" class="form-control" id="inputPassword4">
+      <div class="col-md-6 py-2">
+        <label for="password" class="form-label">Password</label>
+        <input type="string" class="form-control" id="password" name="password" required>
       </div>      
-      <p></p>
-      <div class="col-md-6">
-        <label for="inputPassword4" class="form-label">Confirm Password</label>
-        <input type="password" class="form-control" id="inputPassword4">
+      <div class="col-md-6 py-2">
+        <label for="conformPassword" class="form-label">Confirm Password</label>
+        <input type="password" class="form-control" id="conformPassword" required>
       </div>      
-      <p></p>
-
-      <select>
-        <option value="1">Security Qesiton</option>
-        <option value="2">What is your mother's maiden name?</option>
-        <option value="3">What is the name of your first school?</option>
-        <option value="4">What high school did you attend?</option>
-        <option value="5">In what city were you born?</option>
-    </select>
-
-
-      <div class="col-md-6">
-        <label for="inputPassword4" class="form-label">Asnwer</label>
-        <input type="password" class="form-control" id="inputPassword4">
+      <div class="col-md-6 py-2">
+        <label for="securityQuestion">Security Question</label>
+        <select required name="securityQuestion" id="securityQuestion">
+            <option default>Security Question</option>
+            <option value="1">What is your mother's maiden name?</option>
+            <option value="2">What is the name of your first school?</option>
+            <option value="3">What high school did you attend?</option>
+            <option value="4">In what city were you born?</option>
+        </select>
+        </div>
+      <div class="col-md-6 py-2">
+        <label for="security-answer" class="form-label">Answer</label>
+        <input type="text" class="form-control" id="security-answer" name="securityAnswer">
       </div> 
-
-      
-      <p></p>
-        
          
-        <div>
-          <button type="button" class="btn btn-primary btn-lg">submit</button>
-      
+      <div>
+          <button type="submit" class="btn btn-primary btn-lg">submit</button>
       </div>
 
-        <p></p>
-        
       </form>
        
       

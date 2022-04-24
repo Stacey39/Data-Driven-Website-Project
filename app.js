@@ -90,11 +90,11 @@ app.get('/home', function (request, response) {
 });
 
 
-app.get('/register', (req, res, next) => {
+app.get('/register', (req, res) => {
     res.sendFile(path.join(__dirname + '/register.html'));
 });
 
-app.post('/register', (req, res, next) => {
+app.post('/register', (req, res) => {
     console.log(req.body);
     User.create(req.body)
         .then((result) => {
@@ -104,6 +104,44 @@ app.post('/register', (req, res, next) => {
         .catch((err) => {
             console.log('create use error', err);
         });
+});
+
+app.get('/changeInfo', (req, res) => {
+    User.findOne({ username: req.session.email })
+        .then((user) => {
+            req.user = {
+                ...user,
+            };
+            res.sendFile(path.join(__dirname + '/changeinformation.html'));
+            response.end();
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+});
+
+app.post('/changeInfo', (req, res) => {
+    User.findOne({ username: req.body.email})
+        .then((user) => {
+            user = {
+                ...user,
+                ...req.body
+            };
+            return user.save();
+        })
+        .then((success) => {
+            console.log('2', success);
+            if (success) {
+                res.redirect('/home');
+            }
+            else {
+                response.send('Update fail');
+            }
+            response.end();
+        })
+        .catch((err) => {
+            console.log(err);
+        })
 });
 
 sequelize
